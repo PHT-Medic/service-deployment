@@ -60,7 +60,7 @@ Vault needs to be configured manually since secret information is created in mem
     ```
    To check that all engines were create run `vault secrets list`
 
-7. Test the Vault API, it should display the previous created engines
+7. Test the Vault API after exiting the container, it should display the previous created engines
     ```shell
     curl -H "X-Vault-Token: <vault-token>" -X GET http://127.0.0.1:3400/v1/sys/mounts | jq
     ```
