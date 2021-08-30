@@ -1,6 +1,9 @@
 # PHT Internal services deployment
 
 ## Login to the gitlab container registry
+
+You might need to create a personal access token for an account with access to all the repositories.
+
 ```shell
 docker login registry.gitlab.com
 ```
