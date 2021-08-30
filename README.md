@@ -22,7 +22,7 @@ Vault needs to be configured manually since secret information is created in mem
     vault operator init
     ```
 
-4. Vaul starts in a sealed state by default, unseal it by performing the unseal operation with three of the previously displayed keys
+4. Vault starts in a sealed state by default, unseal it by performing the unseal operation with three of the previously displayed keys
     ```shell
     vault operator unseal
     ```
@@ -60,13 +60,37 @@ Vault needs to be configured manually since secret information is created in mem
     ```
    To check that all engines were create run `vault secrets list`
 
+7. Test the Vault API, it should display the previous created engines
+    ```shell
+    curl -H "X-Vault-Token: <vault-token>" -X GET http://127.0.0.1:3400/v1/sys/mounts | jq
+    ```
+   
+## Unsealing Vault
+
+Vault needs to be unsealed when the container or docker-compose is restarted: 
+Shell into the running container
+ ```shell
+ docker exec -it pht-vault sh
+ ```
+Unseal vault with 3 of the initially generated unseal keys
+ ```shell
+ vault operator unseal
+ ```
 
 ## .env file
-Define environment variables used for multiple services in the `.env` file
+Fill in the environment variables used for multiple services in the `.env` file.  
 
 ## Running the rest of the services
+1. Fill in the blank environment variables in the `docker-compose.yml` file for each service with the values of the 
+   current configuration
+2. Start the other services in the docker-compose
+    ```shell
+    docker-compose up -d
+    ```
+3. Check the logs for errors
+    ```shell
+    docker-compose logs
+    ```
 
-
-## Installing vault
 
 
