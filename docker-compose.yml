@@ -20,7 +20,7 @@ services:
     command: vault server -config=/vault/config/vault_config.json
 
   email-service:
-    image: registry.gitlab.com/personalhealthtrain/implementations/germanmii/difuture/central/email-service
+    image: ghcr.io/pht-eu/central-email-service:main
     container_name: email-service
     restart: unless-stopped
     env_file:
@@ -35,7 +35,7 @@ services:
       - SMTP_HOST=
 
   train-router:
-    image: registry.gitlab.com/personalhealthtrain/implementations/germanmii/difuture/central/train-router
+    image: ghcr.io/pht-eu/train-router:latest
     container_name: train-router
     restart: unless-stopped
     env_file:
@@ -45,7 +45,7 @@ services:
 
   train-builder:
     container_name: train-builder
-    image: registry.gitlab.com/personalhealthtrain/implementations/germanmii/difuture/central/train-builder
+    image: ghcr.io/pht-eu/train-builder:latest
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
