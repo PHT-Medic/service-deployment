@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  vault:
+    image: vault:latest
+    container_name: pht-vault
+    restart: unless-stopped
+    volumes:
+      - ./config:/vault/config
+      - ./file:/vault/file
+      - ./logs:/vault/logs
+    ports:
+      - "3400:3400"
+    environment:
+      - VAULT_ADDR=http://0.0.0.0:3400
+      - VAULT_API_ADDR=http://0.0.0.0:3400
+      - VAULT_ADDRESS=http://0.0.0.0:3400
+    cap_add:
+      - IPC_LOCK
+    command: vault server -config=/vault/config/vault_config.json

@@ -1,23 +1,6 @@
 version: '3'
 
 services:
-  vault:
-    image: vault:latest
-    container_name: pht-vault
-    restart: unless-stopped
-    volumes:
-      - ./vault/config:/vault/config
-      - ./vault/file:/vault/file
-      - ./vault/logs:/vault/logs
-    ports:
-      - "3400:3400"
-    environment:
-      - VAULT_ADDR=http://0.0.0.0:3400
-      - VAULT_API_ADDR=http://0.0.0.0:3400
-      - VAULT_ADDRESS=http://0.0.0.0:3400
-    cap_add:
-      - IPC_LOCK
-    command: vault server -config=/vault/config/vault_config.json
 
   email-service:
     image: ghcr.io/pht-medic/central-email-service:main
@@ -57,5 +40,3 @@ services:
   redis:
     image: "redis:alpine"
     restart: unless-stopped
-    ports:
-      - "6379:6379"
