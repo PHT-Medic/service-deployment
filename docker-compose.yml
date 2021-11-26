@@ -3,7 +3,7 @@ version: '3'
 services:
 
   email-service:
-    image: ghcr.io/pht-medic/central-email-service:main
+    image: ghcr.io/pht-medic/central-email-service:latest
     container_name: email-service
     restart: unless-stopped
     env_file:
