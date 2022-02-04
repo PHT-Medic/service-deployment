@@ -40,3 +40,8 @@ services:
   redis:
     image: "redis:alpine"
     restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: pht-ui
