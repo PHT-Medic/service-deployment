@@ -18,7 +18,7 @@ services:
       - SMTP_HOST=
 
   train-router:
-    image: ghcr.io/pht-medic/train-router:latest
+    image: ghcr.io/pht-medic/train-router:dev
     container_name: train-router
     restart: unless-stopped
     env_file:
@@ -28,7 +28,7 @@ services:
 
   train-builder:
     container_name: train-builder
-    image: ghcr.io/pht-medic/train-builder:latest
+    image: ghcr.io/pht-medic/train-builder:dev
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
