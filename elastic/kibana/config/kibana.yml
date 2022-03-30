@@ -3,8 +3,8 @@
 ## https://github.com/elastic/kibana/blob/master/src/dev/build/tasks/os_packages/docker_generator/templates/kibana_yml.template.ts
 #
 server.name: kibana
-server.host: 0.0.0.0
-elasticsearch.hosts: [ "http://elasticsearch:${ELASTICSEARCH_PORT}" ]
+server.host: 193.196.20.82
+elasticsearch.hosts: [ "http://elasticsearch:9200" ]
 enterpriseSearch.host: http://enterprise-search:${ENTERPRISE_SEARCH_PORT}
 monitoring.ui.container.elasticsearch.enabled: true
 
