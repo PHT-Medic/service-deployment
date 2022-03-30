@@ -112,7 +112,7 @@ response = Elastic_Client.search(index="test_index",
                 {
                     "term": {
                         "tags": {
-                            "value": "train_builder_tag"
+                            "value": "test_tag"
                         }
                     }
                 }

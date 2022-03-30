@@ -10,7 +10,7 @@ services:
       - ./extensions/enterprise-search/config/enterprise-search.yml:/usr/share/enterprise-search/config/enterprise-search.yml:ro,Z
     environment:
       JAVA_OPTS: -Xmx2g -Xms2g
-      ENT_SEARCH_DEFAULT_PASSWORD: ${ELASTIC_USER}
+      ENT_SEARCH_DEFAULT_PASSWORD: ${ENTERPRISE_SEARCH_PASSWORD}
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
     ports:
       - ${ENTERPRISE_SEARCH_PORT}:3002
