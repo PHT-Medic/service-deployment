@@ -1,36 +1,166 @@
-version: "3"
+version: '3.7'
+
 services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:$ELASTIC_VERSION
-    environment:
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      - "discovery.type=single-node"
-      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - xpack.security.enabled=$ELASTIC_SECURITY
-    ports:
-      - "9200:9200"
+
+  # The 'setup' service runs a one-off script which initializes the
+  # 'logstash_internal' and 'kibana_system' users inside Elasticsearch with the
+  # values of the passwords defined in the '.env' file.
+  #
+  # This task is only performed during the *initial* startup of the stack. On all
+  # subsequent runs, the service simply returns immediately, without performing
+  # any modification to existing users.
+  setup:
+    build:
+      context: setup/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    init: true
     volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
+      - setup:/state:Z
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+    env_file:
+      - .env
+
+  autoheal:
+    restart: always
+    image: willfarrell/autoheal
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - proxynet
+
+  elasticsearch:
+    build:
+      context: elasticsearch/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - ./elasticsearch:/usr/share/elasticsearch/data:z
+    ports:
+      - ${ELASTICSEARCH_PORT}:9200
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: -Xmx256m -Xms256m
+      # Bootstrap password.
+      # Used to initialize the keystore during the initial startup of
+      # Elasticsearch. Ignored on subsequent runs.
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      discovery.type: single-node
+    networks:
+      - proxynet
+    env_file:
+      - .env
+
+  logstash:
+    build:
+      context: logstash/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+    ports:
+      - ${LOGSTASH_PORT}:5044
+      - "5045:5045"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: -Xmx256m -Xms256m
+      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+    networks:
+      - proxynet
+    depends_on:
+      - elasticsearch
+    env_file:
+      - .env
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:$ELASTIC_VERSION
-    ports:
-      - "5601:5601"
-    environment:
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=$ELASTIC_PASSWORD
-
-  filebeat:
-    image: docker.elastic.co/beats/filebeat:$ELASTIC_VERSION
-    user: root
+    build:
+      context: kibana/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
     volumes:
-      - /opt/elk/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - /mnt/drive/docker/:/var/lib/docker:ro
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
+    ports:
+      - ${KIBANA_PORT}:5601
     environment:
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=$ELASTIC_PASSWORD
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+    networks:
+      - proxynet
+    depends_on:
+      - elasticsearch
+    env_file:
+      - .env
+
+#  enterprise-search:
+#    build:
+#      context: extensions/enterprise-search/
+#      args:
+#        ELASTIC_VERSION: ${ELASTIC_VERSION}
+#    volumes:
+#      - ./extensions/enterprise-search/config/enterprise-search.yml:/usr/share/enterprise-search/config/enterprise-search.yml:ro,Z
+#    environment:
+#      JAVA_OPTS: -Xmx2g -Xms2g
+#      ENT_SEARCH_DEFAULT_PASSWORD: ${ELASTIC_USER}
+#      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+#    ports:
+#      - ${ENTERPRISE_SEARCH_PORT}:3002
+#    networks:
+#      - elk
+#    depends_on:
+#      - elasticsearch
+#    env_file:
+#      - .env
+
+#  filebeat:
+#    build:
+#      context: extensions/filebeat/
+#      args:
+#        ELASTIC_VERSION: ${ELASTIC_VERSION}
+#    user: root
+#    command:
+#      # Log to stderr.
+#      - -e
+#      - --strict.perms=false
+#    volumes:
+#      - ./extensions/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro,Z
+#      - ${FILEBEAT_LOGS_PATH_LOCALLY}
+#      - type: bind
+#        source: /var/lib/docker/containers
+#        target: /var/lib/docker/containers
+#        read_only: true
+#      - type: bind
+#        source: /var/run/docker.sock
+#        target: /var/run/docker.sock
+#        read_only: true
+#    ports:
+#      - ${FILEBEAT_PORT}:5044
+#    environment:
+#      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+#    networks:
+#      - proxynet
+#    depends_on:
+#      - elasticsearch
+#      - logstash
+#      - kibana
+#    env_file:
+#      - .env
+
+
+
+networks:
+  proxynet:
+    name: elk
 
 volumes:
-  elasticsearch_data:
+  setup:
+  elasticsearch:
