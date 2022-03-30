@@ -88,7 +88,6 @@ def post_logs_to_index(index: str, tag: list, path: str):
     for log in logs:
         log = json.loads(log)
         log['tags'] = tag
-        #print("Line in logs : {}".format(log))
         post = elastic_client.index(index=index, id=_id, document=log)
         _id += 1
         #print(post)
