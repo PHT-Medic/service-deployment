@@ -4,7 +4,7 @@
 #
 server.name: kibana
 server.host: 0.0.0.0
-elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+elasticsearch.hosts: [ "http://elasticsearch:9000" ]
 enterpriseSearch.host: http://enterprise-search:${ENTERPRISE_SEARCH_PORT}
 monitoring.ui.container.elasticsearch.enabled: true
 
