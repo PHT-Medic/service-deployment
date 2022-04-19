@@ -27,12 +27,12 @@ Depending on the authentication method one is using there are different ways to 
 
 Connection without Authentification:
 ```
-Elastic_Client = Elasticsearch("https://localhost:9200")
+Elastic_Client = Elasticsearch("https://<ip-adress>:<elasticsearch-port>")
 ```
 Connection with basic Authentification:
 ```
 Elastic_Client = Elasticsearch(
-    "https://localhost:9200",
+    "https://<ip-adress>:<elasticsearch-port>",
     basic_auth=("username", "password")
 )
 ```
@@ -40,7 +40,7 @@ Elastic_Client = Elasticsearch(
 Connection with API Key Authentification:
 ```
 Elastic_Client = Elasticsearch(
-    "https://localhost:9200",
+    "https://<ip-adress>:<elasticsearch-port>",
     api_key=("api_key.id", "api_key.api_key")
 )
 ```

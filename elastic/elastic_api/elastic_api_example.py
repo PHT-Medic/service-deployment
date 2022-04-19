@@ -11,7 +11,10 @@ import ecs_logging
 
 load_dotenv(find_dotenv())
 
+# Api key generally needs to be configured in the Kibana interface and then added to your environment variables
 api_key = os.getenv('ELASTIC_API_KEY')
+
+# Change the host variable according to your configurations <ip-adress>:<elasticsearch-port>
 elastic_host = "http://localhost:9200"
 index = "train_logs_test"
 tag_tuebingen = ["train_tuebingen"]

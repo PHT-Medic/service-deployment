@@ -45,6 +45,8 @@ By default, the stack exposes the following ports:
 * 9300: Elasticsearch TCP transport
 * 5601: Kibana
 
+Port mapping can be done in the ```docker-compose.yaml``` file to expose only specific ports on your machine.
+
 ## Usage
 
 **:warning: You must rebuild the stack images with `docker-compose build` whenever you switch branch or update the
@@ -62,7 +64,7 @@ $ docker-compose up
 *:information_source: You can also run all services in the background (detached mode) by appending the `-d` flag to the
 above command.*
 
-Give Kibana about a minute to initialize, then access the Kibana web UI by opening <http://localhost:5601> in a web
+Give Kibana about a minute to initialize, then access the Kibana web UI by opening ```http://<ip-adress>:<kibana-port>``` in a web
 browser and use the specified credentials in your `.env` file to log in.
 
 
@@ -103,7 +105,7 @@ containers: [Install Elasticsearch with Docker][es-docker].
 
 The Kibana default configuration is stored in [`kibana/config/kibana.yml`][config-kbn].
 
-When installing the elastic stack on a new system you must change the `elasticsearch.hosts` variable to the corresponding
+When installing the elastic stack on a new system you must change the `elasticsearch.hosts` variable`in the ```kibana.yaml``` file to the corresponding
 ip adress of your hardware:
 
 ```

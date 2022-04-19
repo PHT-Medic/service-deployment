@@ -13,3 +13,5 @@ xpack.license.self_generated.type: basic
 xpack.security.enabled: true
 xpack.monitoring.collection.enabled: false
 xpack.security.authc.api_key.enabled: false
+
+discovery.type: single-node
