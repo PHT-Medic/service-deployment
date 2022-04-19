@@ -140,13 +140,14 @@ Follow the instructions from the Wiki: [Scaling out Elasticsearch](https://githu
 If for any reason your are unable to use Kibana to change the password of your users (including [built-in
 users][builtin-users]), you can use the Elasticsearch API instead and achieve the same result.
 
-In the example below, we reset the password of the `elastic` user (notice "/user/elastic" in the URL):
+In the example below, we change the password of the `elastic` user (notice "/user/elastic" in the URL):
 
-```console
-$ curl -XPOST -D- 'http://localhost:9200/_security/user/elastic/_password' \
-    -H 'Content-Type: application/json' \
-    -u elastic:<your current elastic password> \
-    -d '{"password" : "<your new password>"}'
+```API call
+$ POST 'http://<ip>:<elasticsearch_port>/_security/user/elastic/_password' 
+    
+      {
+         "password" : "<your new password>"
+      }
 ```
 
 ## Extensibility
