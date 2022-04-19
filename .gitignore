@@ -1,3 +1,4 @@
 .idea/
 venv/
 /elastic/test_filebeat_logs/
+/elastic/.env
