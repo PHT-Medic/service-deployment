@@ -103,6 +103,13 @@ containers: [Install Elasticsearch with Docker][es-docker].
 
 The Kibana default configuration is stored in [`kibana/config/kibana.yml`][config-kbn].
 
+When installing the elastic stack on a new system you must change the `elasticsearch.hosts` variable to the corresponding
+ip adress of your hardware:
+
+```
+elasticsearch.hosts: [ "http://<your_ip_adress>:<elasticsearch_port>" ]
+```
+
 You can also specify the options you want to override by setting environment variables inside the Compose file:
 
 ```yml
@@ -118,6 +125,17 @@ containers: [Install Kibana with Docker][kbn-docker].
 ### How to configure Logstash
 
 The Logstash configuration is stored in [`logstash/config/logstash.yml`][config-ls].
+
+In the `logstash.yml` you must again change the `elasticsearch.hosts` variable to the corresponding
+ip adress of your hardware:
+
+```
+output {
+	elasticsearch {
+	 hosts => "http://<your_ip_adress>:<elasticsearch_port>" 
+	 }
+}
+```
 
 You can also specify the options you want to override by setting environment variables inside the Compose file:
 
@@ -149,6 +167,9 @@ $ POST 'http://<ip>:<elasticsearch_port>/_security/user/elastic/_password'
          "password" : "<your new password>"
       }
 ```
+
+In general this needs to be repeated for the `kibana_system` user. And keep in mind to update the changed 
+password in the `.env` file. 
 
 ## Extensibility
 
