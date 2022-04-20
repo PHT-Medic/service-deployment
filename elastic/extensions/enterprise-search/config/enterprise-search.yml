@@ -1,0 +1,28 @@
+---
+## Enterprise Search core configuration
+## https://www.elastic.co/guide/en/enterprise-search/current/configuration.html
+#
+
+## --------------------- REQUIRED ---------------------
+
+# Encryption keys to protect application secrets.
+secret_management.encryption_keys:
+  - ${ENCRYPTION_KEY1}
+  - ${ENCRYPTION_KEY2}
+
+## ----------------------------------------------------
+
+# IP address Enterprise Search listens on
+ent_search.listen_host: 0.0.0.0
+
+# URL at which users reach Enterprise Search / Kibana
+ent_search.external_url: ${ENTERPRISE_SEARCH_HOST}
+kibana.host: ${KIBANA_HOST}
+
+# Elasticsearch URL and credentials
+elasticsearch.host: ${ELASTIC_HOST}
+elasticsearch.username: ${ELASTIC_USER}
+elasticsearch.password: ${ELASTIC_PASSWORD}
+
+# Allow Enterprise Search to modify Elasticsearch settings. Used to enable auto-creation of Elasticsearch indexes.
+allow_es_settings_modification: true
