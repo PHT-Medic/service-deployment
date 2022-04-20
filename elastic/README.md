@@ -49,8 +49,8 @@ Port mapping can be done in the ```docker-compose.yaml``` file to expose only sp
 
 ## Usage
 
-**:warning: You must rebuild the stack images with `docker-compose build` whenever you switch branch or update the
-[version](#version-selection) of an already existing stack.**
+ You must rebuild the stack images with `docker-compose build` whenever you switch branch or update the
+[version](#version-selection) of an already existing stack.
 
 ### Bringing up the stack
 
@@ -61,8 +61,8 @@ Compose:
 $ docker-compose up
 ```
 
-*:information_source: You can also run all services in the background (detached mode) by appending the `-d` flag to the
-above command.*
+You can also run all services in the background (detached mode) by appending the `-d` flag to the
+above command.
 
 Give Kibana about a minute to initialize, then access the Kibana web UI by opening ```http://<ip-adress>:<kibana-port>``` in a web
 browser and use the specified credentials in your `.env` file to log in.
@@ -81,14 +81,14 @@ $ docker-compose down -v
 
 ## Configuration
 
-*:information_source: Configuration is not dynamically reloaded, you will need to restart individual components after
-any configuration change.*
+Configuration is not dynamically reloaded, you will need to restart individual components after
+any configuration change.
 
 ### How to configure Elasticsearch
 
 The Elasticsearch configuration is stored in [`elasticsearch/config/elasticsearch.yml`][config-es].
 
-You can also specify the options you want to override by setting environment variables inside the Compose file:
+You can also specify the options you want to override by setting environment variables inside the ```docker-compose.yaml``` file:
 
 ```yml
 elasticsearch:
@@ -109,7 +109,7 @@ When installing the elastic stack on a new system you must change the `elasticse
 ip adress of your hardware:
 
 ```
-elasticsearch.hosts: [ "http://<your_ip_adress>:<elasticsearch_port>" ]
+elasticsearch.hosts: [ "http://<your-ip-adress>:<elasticsearch-port>" ]
 ```
 
 You can also specify the options you want to override by setting environment variables inside the Compose file:
@@ -134,7 +134,7 @@ ip adress of your hardware:
 ```
 output {
 	elasticsearch {
-	 hosts => "http://<your_ip_adress>:<elasticsearch_port>" 
+	 hosts => "http://<your-ip-adress>:<elasticsearch-port>" 
 	 }
 }
 ```
@@ -163,7 +163,7 @@ users][builtin-users]), you can use the Elasticsearch API instead and achieve th
 In the example below, we change the password of the `elastic` user (notice "/user/elastic" in the URL):
 
 ```API call
-$ POST 'http://<ip>:<elasticsearch_port>/_security/user/elastic/_password' 
+$ POST 'http://<your-ip-adress>:<elasticsearch-port>/_security/user/elastic/_password' 
     
       {
          "password" : "<your new password>"
@@ -174,6 +174,8 @@ In general this needs to be repeated for the `kibana_system` user. And keep in m
 password in the `.env` file. 
 
 ## Extensibility
+
+In this project two extensions are available: ```filebeat``` and ```enterprise-search```.
 
 ### How to add plugins
 

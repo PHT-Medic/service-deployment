@@ -16,6 +16,8 @@ api_key = os.getenv('ELASTIC_API_KEY')
 
 # Change the host variable according to your configurations <ip-adress>:<elasticsearch-port>
 elastic_host = "http://localhost:9200"
+elastic_host = "http://193.196.20.82:9000"
+
 index = "train_logs_test"
 tag_tuebingen = ["train_tuebingen"]
 tag_munich = ["train_munich"]
